@@ -2,7 +2,6 @@
 
 import streamlit as st
 import pandas as pd
-import plotly.express as px
 from xgboost import XGBClassifier
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 
