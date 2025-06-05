@@ -32,12 +32,6 @@ df.drop_duplicates(inplace=True)
 df['Country'] = df['Country'].str.strip()
 df.columns = df.columns.str.strip()  # Remove whitespace from column names
 
-# Rename if necessary
-if 'continent' in df.columns:
-    df.rename(columns={'continent': 'Continent'}, inplace=True)
-elif 'CONTINENT' in df.columns:
-    df.rename(columns={'CONTINENT': 'Continent'}, inplace=True)
-
 le = LabelEncoder()
 df['Country_Num'] = le.fit_transform(df['Country'])
 
