@@ -33,6 +33,25 @@ blood_types = ['A+', 'O+', 'B+', 'AB+', 'A-', 'B-', 'O-', 'AB-']
 selected_blood = st.sidebar.selectbox("Select Your Blood Type", blood_types)
 role = st.sidebar.radio("Are you a...", ['Donor', 'Recipient'])
 
+# Predictions
+def get_predictions(blood_type, role):
+    results = {}
+    for continent in continents:
+        # Example input format - adjust to match what your model expects
+        input_features = pd.DataFrame([{
+            'Continent': continent,
+            'Blood Type': blood_type,
+            'Role': role
+        }])
+        # Assuming model.predict_proba is valid for this input
+        try:
+            prob = model.predict_proba(input_features)[0][1] * 100
+        except:
+            prob = 0
+        results[continent] = round(prob, 2)
+    return results
+
+
 if st.sidebar.button("Submit"):
     predictions = get_predictions(selected_blood, role)
     tab_list = st.tabs(continents)
