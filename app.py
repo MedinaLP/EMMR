@@ -59,7 +59,7 @@ if st.sidebar.button("Submit"):
     for idx, continent in enumerate(continents):
         with tab_list[idx]:
             st.header(f"{continent}") 
-            st.subheader(Overview for {selected_blood} ({role})")
+            st.subheader("Overview for {selected_blood} ({role})")
             continent_data = df[df['Continent'] == continent].copy()
             continent_data['Blood Type'] = selected_blood
             continent_data['Count'] = continent_data[selected_blood]
