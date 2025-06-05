@@ -24,7 +24,6 @@ df = load_data()
 world_data = load_world_data()
 model = load_model()
 
-
 bloodtype_columns = ['O+', 'A+', 'B+', 'AB+', 'O-', 'A-', 'B-', 'AB-']
 
 # --- UI ---
@@ -33,36 +32,17 @@ blood_types = ['A+', 'O+', 'B+', 'AB+', 'A-', 'B-', 'O-', 'AB-']
 selected_blood = st.sidebar.selectbox("Select Your Blood Type", blood_types)
 role = st.sidebar.radio("Are you a...", ['Donor', 'Recipient'])
 
-# Predictions
-def get_predictions(blood_type, role):
-    results = {}
-    for Continent in continents:
-        # Example input format - adjust to match what your model expects
-        input_features = pd.DataFrame([{
-            'Continent': continent,
-            'Blood Type': blood_type,
-            'Role': role
-        }])
-        # Assuming model.predict_proba is valid for this input
-        try:
-            prob = model.predict_proba(input_features)[0][1] * 100
-        except:
-            prob = 0
-        results[continent] = round(prob, 2)
-    return results
-
-
 if st.sidebar.button("Submit"):
-    predictions = get_predictions(selected_blood, role)
+    #predictions = get_predictions(selected_blood, role)
     tab_list = st.tabs(continents)
 
     for idx, continent in enumerate(continents):
         with tab_list[idx]:
             st.header(f"{continent}") 
             st.subheader("Overview for {selected_blood} ({role})")
-            continent_data = df[df['Continent'] == continent].copy()
-            continent_data['Blood Type'] = selected_blood
-            continent_data['Count'] = continent_data[selected_blood]
+            #continent_data = df[df['Continent'] == continent].copy()
+            #continent_data['Blood Type'] = selected_blood
+            #continent_data['Count'] = continent_data[selected_blood]
 
             if continent_data.empty:
                 st.warning(f"No data available for {continent}.")
