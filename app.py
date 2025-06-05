@@ -11,13 +11,19 @@ import plotly.express as px
 def load_data():
     return pd.read_csv('blood_data.csv')
 
+@st.cache_data
+def load_world_data():
+    return pd.read_csv('world_data.csv')
+
 @st.cache_resource
 def load_model():
     return joblib.load('xgb_model.pkl')
 
 # --- Load Data and Model ---
 df = load_data()
+world_data = load_world_data()
 model = load_model()
+
 
 bloodtype_columns = ['O+', 'A+', 'B+', 'AB+', 'O-', 'A-', 'B-', 'AB-']
 
@@ -44,14 +50,13 @@ st.title("🌍 Data-driven Global Prediction of Blood Type Probabilities for Don
 # Show the bar graph only if World data is available
 st.write("Available Country Names:", df['Country'].unique())
 
-world_data = df[df['Country'].str.strip().str.lower() == 'world'].copy()
-if not World_row.empty:
-    world_blood_data = World_row[bloodtype_columns].T.reset_index()
-    world_blood_data.columns = ['Blood Type', 'Proportion']
+if not world_data.empty:
+    blood_counts = world_data[bloodtype_columns].T.reset_index()
+    blood_counts.columns = ['Blood Type', 'Proportion']
 
     st.subheader("World Blood Type Distribution")
     fig = px.bar(
-        world_blood_data,
+        blood_counts,
         x='Blood Type',
         y='Proportion',
         color='Blood Type',
@@ -59,5 +64,11 @@ if not World_row.empty:
         labels={'Proportion': 'Proportion (Normalized)'}
     )
     st.plotly_chart(fig, use_container_width=True)
+
+    most_common = blood_counts.loc[blood_counts['Proportion'].idxmax(), 'Blood Type']
+    least_common = blood_counts.loc[blood_counts['Proportion'].idxmin(), 'Blood Type']
+    st.success(f"Most Common Blood Type in the World: **{most_common}**")
+    st.warning(f"Rarest Blood Type in the World: **{least_common}**")
 else:
-    st.warning("No 'World' data row found in dataset.")
+    st.warning("No global data available.")
+
