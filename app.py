@@ -26,6 +26,17 @@ model = load_model()
 
 bloodtype_columns = ['O+', 'A+', 'B+', 'AB+', 'O-', 'A-', 'B-', 'AB-']
 
+# Define continent coordinates (optional for maps)
+continent_coords = {
+    'Africa': (1.6508, 10.2679),
+    'Asia': (34.0479, 100.6197),
+    'Europe': (54.5260, 15.2551),
+    'North America': (54.5260, -105.2551),
+    'South America': (-8.7832, -55.4915),
+    'Oceania': (-25.2744, 133.7751)
+}
+continents = list(continent_coords.keys())
+
 # --- UI ---
 st.sidebar.header("Blood Type Probability Tool")
 blood_types = ['A+', 'O+', 'B+', 'AB+', 'A-', 'B-', 'O-', 'AB-']
@@ -47,17 +58,6 @@ if st.sidebar.button("Submit"):
             if continent_data.empty:
                 st.warning(f"No data available for {continent}.")
                 continue
-
-# Define continent coordinates (optional for maps)
-continent_coords = {
-    'Africa': (1.6508, 10.2679),
-    'Asia': (34.0479, 100.6197),
-    'Europe': (54.5260, 15.2551),
-    'North America': (54.5260, -105.2551),
-    'South America': (-8.7832, -55.4915),
-    'Oceania': (-25.2744, 133.7751)
-}
-continents = list(continent_coords.keys())
 
 # --- Starting Page with Global Overview ---
 st.title("🌍 Data-driven Global Prediction of Blood Type Probabilities for Donors and Patients")
