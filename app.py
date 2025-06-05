@@ -54,43 +54,6 @@ continent_coords = {
 }
 continents = list(continent_coords.keys())
 
-country_to_continent = {
-    'Albania': 'Europe', 'Algeria': 'Africa', 'Argentina': 'South America', 'Armenia': 'Asia',
-    'Australia': 'Oceania', 'Austria': 'Europe', 'Azerbaijan': 'Asia', 'Bahrain': 'Asia',
-    'Bangladesh': 'Asia', 'Belarus': 'Europe', 'Belgium': 'Europe', 'Bhutan': 'Asia',
-    'Bolivia': 'South America', 'Bosnia and Herzegovina': 'Europe', 'Brazil': 'South America',
-    'Bulgaria': 'Europe', 'Burkina Faso': 'Africa', 'Cambodia': 'Asia', 'Cameroon': 'Africa',
-    'Canada': 'North America', 'Chile': 'South America', 'China': 'Asia', 'Colombia': 'South America',
-    'Costa Rica': 'North America', 'Croatia': 'Europe', 'Cuba': 'North America', 'Cyprus': 'Asia',
-    'Czech Republic': 'Europe', 'Democratic Republic of the Congo': 'Africa', 'Denmark': 'Europe',
-    'Dominican Republic': 'North America', 'Ecuador': 'South America', 'Egypt': 'Africa',
-    'El Salvador': 'North America', 'Estonia': 'Europe', 'Ethiopia': 'Africa', 'Fiji': 'Oceania',
-    'Finland': 'Europe', 'France': 'Europe', 'Gabon': 'Africa', 'Georgia': 'Asia', 'Germany': 'Europe',
-    'Ghana': 'Africa', 'Greece': 'Europe', 'Guinea': 'Africa', 'Honduras': 'North America',
-    'Hong Kong': 'Asia', 'Hungary': 'Europe', 'Iceland': 'Europe', 'India': 'Asia',
-    'Indonesia': 'Asia', 'Iran': 'Asia', 'Iraq': 'Asia', 'Ireland': 'Europe', 'Israel': 'Asia',
-    'Italy': 'Europe', 'Ivory Coast': 'Africa', 'Jamaica': 'North America', 'Japan': 'Asia',
-    'Jordan': 'Asia', 'Kazakhstan': 'Asia', 'Kenya': 'Africa', 'Laos': 'Asia', 'Latvia': 'Europe',
-    'Lebanon': 'Asia', 'Libya': 'Africa', 'Liechtenstein': 'Europe', 'Lithuania': 'Europe',
-    'Luxemburg': 'Europe', 'Macao': 'Asia', 'Malaysia': 'Asia', 'Malta': 'Europe',
-    'Mauritania': 'Africa', 'Mauritius': 'Africa', 'Mexico': 'North America', 'Moldova': 'Europe',
-    'Mongolia': 'Asia', 'Morocco': 'Africa', 'Myanmar': 'Asia', 'Namibia': 'Africa', 'Nepal': 'Asia',
-    'Netherlands': 'Europe', 'New Zealand': 'Oceania', 'Nicaragua': 'North America',
-    'Nigeria': 'Africa', 'North Korea': 'Asia', 'North Macedonia': 'Europe', 'Norway': 'Europe',
-    'Pakistan': 'Asia', 'Papua New Guinea': 'Oceania', 'Paraguay': 'South America',
-    'Peru': 'South America', 'Philippines': 'Asia', 'Poland': 'Europe', 'Portugal': 'Europe',
-    'Romania': 'Europe', 'Russia': 'Europe', 'Saudi Arabia': 'Asia', 'Serbia': 'Europe',
-    'Singapore': 'Asia', 'Slovakia': 'Europe', 'Slovenia': 'Europe', 'Somalia': 'Africa',
-    'South Africa': 'Africa', 'South Korea': 'Asia', 'Sri Lanka': 'Asia', 'Spain': 'Europe',
-    'Sudan': 'Africa', 'Sweden': 'Europe', 'Switzerland': 'Europe', 'Syria': 'Asia', 'Taiwan': 'Asia',
-    'Thailand': 'Asia', 'Tunisia': 'Africa', 'Turkey': 'Asia', 'Uganda': 'Africa', 'Ukraine': 'Europe',
-    'United Arab Emirates': 'Asia', 'United Kingdom': 'Europe', 'United States': 'North America',
-    'Uzbekistan': 'Asia', 'Venezuela': 'South America', 'Vietnam': 'Asia', 'Yemen': 'Asia',
-    'Zimbabwe': 'Africa'
-}
-
-df['Continent'] = df['Country'].map(country_to_continent)
-
 # --- Prediction Logic ---
 def get_predictions(blood_type, role):
     results = {}
