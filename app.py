@@ -25,6 +25,8 @@ df.drop_duplicates(inplace=True)
 df['Country'] = df['Country'].str.strip()
 df.columns = df.columns.str.strip()  # Remove whitespace from column names
 
+st.write("Available columns:", df.columns.tolist())
+
 # Rename if necessary
 if 'continent' in df.columns:
     df.rename(columns={'continent': 'Continent'}, inplace=True)
