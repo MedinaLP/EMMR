@@ -19,33 +19,6 @@ def load_model():
 df = load_data()
 model = load_model()
 
-# --- Data Preprocessing ---
-df.fillna(0, inplace=True)
-df.drop_duplicates(inplace=True)
-df['Country'] = df['Country'].str.strip()
-df.columns = df.columns.str.strip()  # Remove whitespace from column names
-
-st.write("Available columns:", df.columns.tolist())
-
-# Rename if necessary
-if 'continent' in df.columns:
-    df.rename(columns={'continent': 'Continent'}, inplace=True)
-elif 'CONTINENT' in df.columns:
-    df.rename(columns={'CONTINENT': 'Continent'}, inplace=True)
-
-le = LabelEncoder()
-df['Country_Num'] = le.fit_transform(df['Country'])
-
-bloodtype_columns = ['O+', 'A+', 'B+', 'AB+', 'O-', 'A-', 'B-', 'AB-']
-df['Total_Rh_Pos'] = df[['O+', 'A+', 'B+', 'AB+']].sum(axis=1)
-df['Total_Rh_Neg'] = df[['O-', 'A-', 'B-', 'AB-']].sum(axis=1)
-df['Rarest_Blood_Type'] = df[bloodtype_columns].idxmin(axis=1)
-df['Most_Common_Blood_Type'] = df[bloodtype_columns].idxmax(axis=1)
-
-scaler = MinMaxScaler()
-cols_to_normalize = ['Population'] + bloodtype_columns + ['Total_Rh_Pos', 'Total_Rh_Neg']
-df[cols_to_normalize] = scaler.fit_transform(df[cols_to_normalize])
-
 # --- UI ---
 st.sidebar.header("Blood Type Probability Tool")
 blood_types = ['A+', 'O+', 'B+', 'AB+', 'A-', 'B-', 'O-', 'AB-']
