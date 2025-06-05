@@ -2,7 +2,7 @@
 
 import streamlit as st
 import pandas as pd
-from projectnew import xgb_model, cleaned_data
+from projectnew import df as xgb_model, cleaned_data
 
 # --- Load the model and data from current notebook environment ---
 try:
