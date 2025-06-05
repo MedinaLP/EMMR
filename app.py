@@ -81,14 +81,33 @@ def get_predictions(blood_type, role):
         results[continent] = round(prob, 2)
     return results
 
-# --- App Output ---
 if st.sidebar.button("Submit"):
-    predictions = get_predictions(selected_blood, role)
+    # --- Display World Overview First ---
+    st.header(f"🌍 Global Overview for {selected_blood} ({role})")
+
+    world_data = df[df['Country'] == 'World'].copy()
+    if not world_data.empty:
+        # Bar Graph of Blood Type Distribution
+        blood_counts = world_data[bloodtype_columns].T.reset_index()
+        blood_counts.columns = ['Blood Type', 'Proportion']
+        st.plotly_chart(px.bar(blood_counts, x='Blood Type', y='Proportion', title="World Blood Type Proportions"))
+
+        # Most and Least Common
+        most_common = world_data[bloodtype_columns].idxmax(axis=1).values[0]
+        least_common = world_data[bloodtype_columns].idxmin(axis=1).values[0]
+        st.success(f"Most Common Blood Type in the World: **{most_common}**")
+        st.warning(f"Rarest Blood Type in the World: **{least_common}**")
+    else:
+        st.warning("No global data available.")
+
+    # --- Continent Tabs ---
     tab_list = st.tabs(continents)
+    predictions = get_predictions(selected_blood, role)
 
     for idx, continent in enumerate(continents):
         with tab_list[idx]:
             st.header(f"{continent} Overview for {selected_blood} ({role})")
+
             continent_data = df[df['Continent'] == continent].copy()
             continent_data['Blood Type'] = selected_blood
             continent_data['Count'] = continent_data[selected_blood]
@@ -111,7 +130,9 @@ if st.sidebar.button("Submit"):
 
             # Bar Chart - Top 5 Countries
             top_5 = continent_data.nlargest(5, 'Count')
-            if not top_5.empty:
+            if top_5.empty:
+                st.warning(f"No {selected_blood} blood type data for top countries in {continent}.")
+            else:
                 bar_fig = px.bar(
                     top_5,
                     x='Country',
