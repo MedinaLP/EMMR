@@ -56,11 +56,6 @@ if st.sidebar.button("Submit"):
     predictions = get_predictions(selected_blood, role)
     tab_list = st.tabs(continents)
 
-    tab_list = st.tabs(continents)
-
-    for idx, continent in enumerate(continents):
-        with tab_list[idx]:
-            st.header(f"{continent}")
     for idx, continent in enumerate(continents):
         with tab_list[idx]:
             st.header(f"{continent}") 
