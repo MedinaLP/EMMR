@@ -19,6 +19,8 @@ def load_model():
 df = load_data()
 model = load_model()
 
+bloodtype_columns = ['O+', 'A+', 'B+', 'AB+', 'O-', 'A-', 'B-', 'AB-']
+
 # --- UI ---
 st.sidebar.header("Blood Type Probability Tool")
 blood_types = ['A+', 'O+', 'B+', 'AB+', 'A-', 'B-', 'O-', 'AB-']
