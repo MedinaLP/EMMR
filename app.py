@@ -43,7 +43,7 @@ st.title("🌍 Data-driven Global Prediction of Blood Type Probabilities for Don
 
 # Show the bar graph only if World data is available
 World_row = df[df['Country'].str.lower() == 'World']
-if not world_row.empty:
+if not World_row.empty:
     world_blood_data = World_row[bloodtype_columns].T.reset_index()
     world_blood_data.columns = ['Blood Type', 'Proportion']
 
