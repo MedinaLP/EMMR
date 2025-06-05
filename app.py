@@ -9,7 +9,7 @@ import plotly.express as px
 # --- Caching for speed ---
 @st.cache_data
 def load_data():
-    return pd.read_csv('cleaned_data.csv')
+    return pd.read_csv('blood_data.csv')
 
 @st.cache_resource
 def load_model():
