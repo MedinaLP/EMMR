@@ -2,12 +2,12 @@
 
 import streamlit as st
 import pandas as pd
-from project import xgb_model, blood_data
+from project import xgb_model, cleaned_data
 
 # --- Load the model and data from current notebook environment ---
 try:
     model = xgb_model  # The trained model must be in memory
-    df = blood_data     # The cleaned dataset must be assigned to 'df'
+    df = cleaned_data     # The cleaned dataset must be assigned to 'df'
 except NameError:
     st.error("Make sure to define 'xgb_model' and 'blood_data' (as df) in the notebook environment before running the app.")
     st.stop()
