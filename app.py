@@ -26,6 +26,21 @@ model = load_model()
 
 bloodtype_columns = ['O+', 'A+', 'B+', 'AB+', 'O-', 'A-', 'B-', 'AB-']
 
+# --- Data Preprocessing ---
+df.fillna(0, inplace=True)
+df.drop_duplicates(inplace=True)
+df['Country'] = df['Country'].str.strip()
+df.columns = df.columns.str.strip()  # Remove whitespace from column names
+
+# Rename if necessary
+if 'continent' in df.columns:
+    df.rename(columns={'continent': 'Continent'}, inplace=True)
+elif 'CONTINENT' in df.columns:
+    df.rename(columns={'CONTINENT': 'Continent'}, inplace=True)
+
+le = LabelEncoder()
+df['Country_Num'] = le.fit_transform(df['Country'])
+
 # Define continent coordinates (optional for maps)
 continent_coords = {
     'Africa': (1.6508, 10.2679),
@@ -37,6 +52,24 @@ continent_coords = {
 }
 continents = list(continent_coords.keys())
 
+# --- Prediction Logic ---
+def get_predictions(blood_type, role):
+    results = {}
+    for continent in continents:
+        # Example input format - adjust to match what your model expects
+        input_features = pd.DataFrame([{
+            'Continent': continent,
+            'Blood Type': blood_type,
+            'Role': role
+        }])
+        # Assuming model.predict_proba is valid for this input
+        try:
+            prob = model.predict_proba(input_features)[0][1] * 100
+        except:
+            prob = 0
+        results[continent] = round(prob, 2)
+    return results
+
 # --- UI ---
 st.sidebar.header("Blood Type Probability Tool")
 blood_types = ['A+', 'O+', 'B+', 'AB+', 'A-', 'B-', 'O-', 'AB-']
@@ -44,7 +77,7 @@ selected_blood = st.sidebar.selectbox("Select Your Blood Type", blood_types)
 role = st.sidebar.radio("Are you a...", ['Donor', 'Recipient'])
 
 if st.sidebar.button("Submit"):
-    #predictions = get_predictions(selected_blood, role)
+    predictions = get_predictions(selected_blood, role)
     tab_list = st.tabs(continents)
 
     for idx, continent in enumerate(continents):
