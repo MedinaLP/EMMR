@@ -42,9 +42,9 @@ continents = list(continent_coords.keys())
 st.title("🌍 Data-driven Global Prediction of Blood Type Probabilities for Donors and Patients")
 
 # Show the bar graph only if World data is available
-world_row = df[df['Country'].str.lower() == 'world']
+World_row = df[df['Country'].str.lower() == 'World']
 if not world_row.empty:
-    world_blood_data = world_row[bloodtype_columns].T.reset_index()
+    world_blood_data = World_row[bloodtype_columns].T.reset_index()
     world_blood_data.columns = ['Blood Type', 'Proportion']
 
     st.subheader("World Blood Type Distribution")
