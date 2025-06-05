@@ -50,8 +50,7 @@ continent_coords = {
     'Europe': (54.5260, 15.2551),
     'North America': (54.5260, -105.2551),
     'South America': (-8.7832, -55.4915),
-    'Oceania': (-25.2744, 133.7751),
-    'Antarctica': (-82.8628, 135.0000)
+    'Oceania': (-25.2744, 133.7751)
 }
 continents = list(continent_coords.keys())
 
