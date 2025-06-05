@@ -57,7 +57,7 @@ if not world_data.empty:
         x='Blood Type',
         y='Proportion',
         color='Blood Type',
-        title="Distribution of Blood Types in the World",
+        title="Distribution of Blood Types Globally",
         labels={'Proportion': 'Proportion (Normalized)'}
     )
     st.plotly_chart(fig, use_container_width=True)
