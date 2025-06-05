@@ -36,7 +36,7 @@ role = st.sidebar.radio("Are you a...", ['Donor', 'Recipient'])
 # Predictions
 def get_predictions(blood_type, role):
     results = {}
-    for continent in continents:
+    for Continent in continents:
         # Example input format - adjust to match what your model expects
         input_features = pd.DataFrame([{
             'Continent': continent,
