@@ -47,7 +47,7 @@ cols_to_normalize = ['Population'] + bloodtype_columns + ['Total_Rh_Pos', 'Total
 df[cols_to_normalize] = scaler.fit_transform(df[cols_to_normalize])
 
 # --- UI ---
-st.sidebar.header("Blood Type Matching Tool")
+st.sidebar.header("Blood Type Probability Tool")
 blood_types = ['A+', 'O+', 'B+', 'AB+', 'A-', 'B-', 'O-', 'AB-']
 selected_blood = st.sidebar.selectbox("Select Your Blood Type", blood_types)
 role = st.sidebar.radio("Are you a...", ['Donor', 'Recipient'])
@@ -81,7 +81,7 @@ def get_predictions(blood_type, role):
         results[continent] = round(prob, 2)
     return results
 
-if st.sidebar.button("Submit"):
+if st.sidebar.button("Search Blood Type"):
     # --- Display World Overview First ---
     st.header(f"🌍 Global Overview for {selected_blood} ({role})")
 
