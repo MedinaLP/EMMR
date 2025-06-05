@@ -2,8 +2,6 @@
 
 import streamlit as st
 import pandas as pd
-from xgboost import XGBClassifier
-from sklearn.preprocessing import LabelEncoder, MinMaxScaler
 
 # --- Load the model and data from current notebook environment ---
 try:
