@@ -78,7 +78,7 @@ if submitted:
 
     for idx, continent in enumerate(continents):
         with tab_list[idx]:
-            st.header(f"{continent} 
+            st.header(f"{continent}")
             st.subheader(f"Overview for {selected_blood} ({role})")
 
             df_continent = df[df['Continent'] == continent].copy()
