@@ -85,22 +85,59 @@ if submitted:
             )
             st.plotly_chart(map_fig, use_container_width=True)
 
-            # ==========================
-            # BAR: top / bottom 5 countries
-            # ==========================
+            # ==============================================
+            # BAR: top / bottom 5 countries (with compatibility logic)
+            # ==============================================
+            
+            # Blood type compatibility map (recipient → compatible donor types)
+            compatibility_map = {
+                'A+': ['A+', 'A-', 'O+', 'O-'],
+                'O+': ['O+', 'O-'],
+                'B+': ['B+', 'B-', 'O+', 'O-'],
+                'AB+': ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+                'A-': ['A-', 'O-'],
+                'O-': ['O-'],
+                'B-': ['B-', 'O-'],
+                'AB-': ['A-', 'B-', 'AB-', 'O-']
+            }
+            
+            # Blood type recipient map (donor → compatible recipients) [used if role == Donor]
+            donor_map = {
+                'O-': ['A+', 'O+', 'B+', 'AB+', 'A-', 'O-', 'B-', 'AB-'],
+                'O+': ['A+', 'O+', 'B+', 'AB+'],
+                'A-': ['A+', 'A-', 'AB+', 'AB-'],
+                'A+': ['A+', 'AB+'],
+                'B-': ['B+', 'B-', 'AB+', 'AB-'],
+                'B+': ['B+', 'AB+'],
+                'AB-': ['AB+', 'AB-'],
+                'AB+': ['AB+']
+            }
+            
+            # Determine which blood types to sum
             if role == "Donor":
-                bar_data = continent_data.nsmallest(5, selected_blood)
-                bar_title = f"Top 5 Countries needing {selected_blood} blood type"
+                compatible_types = donor_map.get(selected_blood, [])
             else:
-                bar_data = continent_data.nlargest(5, selected_blood)
-                bar_title = f"Top 5 Countries with highest {selected_blood} blood type"
-
+                compatible_types = compatibility_map.get(selected_blood, [])
+            
+            # Sum compatible blood types into a new column
+            continent_data["Compatibility_Score"] = continent_data[compatible_types].sum(axis=1)
+            
+            # Select top/bottom countries based on compatibility score
+            if role == "Donor":
+                bar_data = continent_data.nsmallest(5, "Compatibility_Score")
+                bar_title = f"Top 5 Countries needing {selected_blood} donations (compatible: {', '.join(compatible_types)})"
+            else:
+                bar_data = continent_data.nlargest(5, "Compatibility_Score")
+                bar_title = f"Top 5 Countries with compatible blood for {selected_blood} (types: {', '.join(compatible_types)})"
+            
+            # Plot the bar chart
             bar_fig = px.bar(
                 bar_data,
                 x="Country",
-                y=selected_blood,
+                y="Compatibility_Score",
                 color="Country",
                 title=bar_title,
+                labels={"Compatibility_Score": "Compatibility %"}
             )
             st.plotly_chart(bar_fig, use_container_width=True)
 
