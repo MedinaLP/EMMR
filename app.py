@@ -80,10 +80,31 @@ if submitted:
                 color=selected_blood,
                 hover_name="Country",
                 color_continuous_scale = "Reds" if role.lower() == "donor" else "Blues",
-                title=f"{selected_blood} Distribution in {continent}",
+                title=f"{selected_blood} Blood Type Distribution in {continent}",
                 scope="world"
             )
-            st.plotly_chart(map_fig, use_container_width=True)                
+            st.plotly_chart(map_fig, use_container_width=True)
+
+            # ==========================
+            # BAR: top / bottom 5 countries
+            # ==========================
+            if role == "Donor":
+                bar_data = continent_data.nsmallest(5, selected_blood)
+                bar_title = f"Top 5 Countries NEEDING {selected_blood} (lowest prevalence)"
+            else:
+                bar_data = continent_data.nlargest(5, selected_blood)
+                bar_title = f"Top 5 Countries WITH {selected_blood} (highest prevalence)"
+
+            bar_fig = px.bar(
+                bar_data,
+                x="Country",
+                y=selected_blood,
+                color="Country",
+                title=bar_title,
+            )
+            st.plotly_chart(bar_fig, use_container_width=True)
+
+            
 
 else:
      # --- Starting Page with Global Overview ---
