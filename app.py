@@ -157,18 +157,7 @@ if submitted:
             # ==========================
             # TEXT PREDICTION (simple heuristic based on prevalence)
             # ==========================
-            # Who can donate to whom (recipient → compatible donors)
-            compatibility_map = {
-                'A+': ['A+', 'A-', 'O+', 'O-'],
-                'O+': ['O+', 'O-'],
-                'B+': ['B+', 'B-', 'O+', 'O-'],
-                'AB+': ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
-                'A-': ['A-', 'O-'],
-                'O-': ['O-'],
-                'B-': ['B-', 'O-'],
-                'AB-': ['A-', 'B-', 'AB-', 'O-']
-            }
-
+            
             # Use blood type compatibility to calculate availability
             compatible_types = compatibility_map.get(selected_blood, [])
             
