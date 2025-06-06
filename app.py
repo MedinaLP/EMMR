@@ -69,33 +69,32 @@ blood_types = ['A+', 'O+', 'B+', 'AB+', 'A-', 'B-', 'O-', 'AB-']
 selected_blood = st.sidebar.selectbox("Select Your Blood Type", blood_types)
 role = st.sidebar.radio("Are you a...", ['Donor', 'Recipient'])
 
-if st.sidebar.button("Submit"):
-    
-    # --- Starting Page with Global Overview ---
-    st.title("🌍 Data-driven Global Prediction of Blood Type Probabilities for Donors and Patients")
+# --- Starting Page with Global Overview ---
+st.title("🌍 Data-driven Global Prediction of Blood Type Probabilities for Donors and Patients")
 
-    if not world_data.empty:
-        blood_counts = world_data[bloodtype_columns].T.reset_index()
-        blood_counts.columns = ['Blood Type', 'Proportion']
-    
-        st.subheader("World Blood Type Distribution")
-        fig = px.bar(
-            blood_counts,
-            x='Blood Type',
-            y='Proportion',
-            color='Blood Type',
-            title="Distribution of Blood Types Globally",
-            labels={'Proportion': 'Proportion (Normalized)'}
-        )
-        st.plotly_chart(fig, use_container_width=True)
-    
-        most_common = blood_counts.loc[blood_counts['Proportion'].idxmax(), 'Blood Type']
-        least_common = blood_counts.loc[blood_counts['Proportion'].idxmin(), 'Blood Type']
-        st.success(f"Most Common Blood Type in the World: **{most_common}**")
-        st.warning(f"Rarest Blood Type in the World: **{least_common}**")
-    else:
-        st.warning("No global data available.")
-    
+if not world_data.empty:
+    blood_counts = world_data[bloodtype_columns].T.reset_index()
+    blood_counts.columns = ['Blood Type', 'Proportion']
+
+    st.subheader("World Blood Type Distribution")
+    fig = px.bar(
+        blood_counts,
+        x='Blood Type',
+        y='Proportion',
+        color='Blood Type',
+        title="Distribution of Blood Types Globally",
+        labels={'Proportion': 'Proportion (Normalized)'}
+    )
+    st.plotly_chart(fig, use_container_width=True)
+
+    most_common = blood_counts.loc[blood_counts['Proportion'].idxmax(), 'Blood Type']
+    least_common = blood_counts.loc[blood_counts['Proportion'].idxmin(), 'Blood Type']
+    st.success(f"Most Common Blood Type in the World: **{most_common}**")
+    st.warning(f"Rarest Blood Type in the World: **{least_common}**")
+else:
+    st.warning("No global data available.")
+
+if st.sidebar.button("Submit"):    
     predictions = get_predictions(selected_blood, role)
     tab_list = st.tabs(continents)
 
