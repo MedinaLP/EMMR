@@ -45,22 +45,17 @@ continent_coords = {
 }
 continents = list(continent_coords.keys())
 
-# --- Prediction Logic ---
+# Prediction Function
 def get_predictions(blood_type, role):
     results = {}
     for continent in continents:
-        # Example input format - adjust to match what your model expects
-        input_features = pd.DataFrame([{
-            'Continent': continent,
-            'Blood Type': blood_type,
-            'Role': role
-        }])
-        # Assuming model.predict_proba is valid for this input
-        try:
-            prob = model.predict_proba(input_features)[0][1] * 100
-        except:
-            prob = 0
-        results[continent] = round(prob, 2)
+        input_df = pd.DataFrame({
+            'Blood Type': [blood_type],
+            'Role': [role],
+            'Continent': [continent]
+        })
+        pred = model.predict_proba(input_df)[0][1] * 100
+        results[continent] = round(pred, 2)
     return results
 
 # --- UI ---
@@ -81,26 +76,28 @@ if submitted:
             st.header(f"{continent}")
             st.subheader(f"Overview for {selected_blood} ({role})")
 
-            df_continent = df[df['Continent'] == continent].copy()
-            df_continent = df_continent.sort_values(by='Country')
+           # Filter data for this continent
+            continent_data = df[df['Continent'] == continent].copy()
 
-            # Display map or chart based on donor/recipient logic
-            if role == 'donor':
-                match_column = f"{selected_blood}_donate"
-            else:
-                match_column = f"{selected_blood}_receive"
+            if continent_data.empty:
+                st.warning(f"No data available for {continent}.")
+                continue
 
-            if match_column in df_continent.columns:
-                fig = px.choropleth(df_continent,
-                                    locations="Country",
-                                    locationmode="country names",
-                                    color=match_column,
-                                    hover_name="Country",
-                                    color_continuous_scale="RdBu",
-                                    title=f"{role.title()} Compatibility Map in {continent}")
-                st.plotly_chart(fig)
-            else:
-                st.warning("No compatibility data available for this selection.")
+            # ==========================
+            # MAP: show prevalence of selected blood type
+            # ==========================
+            map_fig = px.choropleth(
+                continent_data,
+                locations="Country",
+                locationmode="country names",
+                color=selected_blood,
+                hover_name="Country",
+                color_continuous_scale="Reds" if role == "donor" else "Blues",
+                title=f"{selected_blood} Distribution in {continent}",
+                scope="world"
+            )
+            st.plotly_chart(map_fig, use_container_width=True)                
+
 else:
      # --- Starting Page with Global Overview ---
     st.title("🌍 Data-driven Global Prediction of Blood Type Probabilities for Donors and Patients")
