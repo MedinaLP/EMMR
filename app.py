@@ -125,7 +125,7 @@ if submitted:
             # Select top/bottom countries based on compatibility score
             if role == "Donor":
                 bar_data = continent_data.nsmallest(5, "Compatibility_Score")
-                bar_title = f"Top 5 Countries needing {selected_blood} donations (compatible: {', '.join(compatible_types)})"
+                bar_title = f"Top 5 Countries needing {selected_blood} donations (compatible donors: {', '.join(compatible_types)})"
             else:
                 bar_data = continent_data.nlargest(5, "Compatibility_Score")
                 bar_title = f"Top 5 Countries with compatible blood for {selected_blood} (types: {', '.join(compatible_types)})"
@@ -178,7 +178,7 @@ if submitted:
     
 else:
      # --- Starting Page with Global Overview ---
-    st.title("🌍 Data-driven Global Prediction of Blood Type Probabilities for Donors and Patients")
+    st.title("🌍 Data-driven Global Prediction of Blood Type Probabilities for Donors and Recipients")
     
     if not world_data.empty:
         blood_counts = world_data[bloodtype_columns].T.reset_index()
