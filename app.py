@@ -121,24 +121,35 @@ if submitted:
             # ==========================
             # TEXT PREDICTION (simple heuristic based on prevalence)
             # ==========================
-            selected_row = pie_vals[pie_vals["Blood Type"] == selected_blood]
+            # Who can donate to whom (recipient → compatible donors)
+            compatibility_map = {
+                'A+': ['A+', 'A-', 'O+', 'O-'],
+                'O+': ['O+', 'O-'],
+                'B+': ['B+', 'B-', 'O+', 'O-'],
+                'AB+': ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+                'A-': ['A-', 'O-'],
+                'O-': ['O-'],
+                'B-': ['B-', 'O-'],
+                'AB-': ['A-', 'B-', 'AB-', 'O-']
+            }
 
-            if selected_row.empty:
-                st.warning(f"No data available for {selected_blood} in {continent}.")
-            else:
-                orig_mean = selected_row["Mean Proportion"].values[0]
-                orig_mean_pct = round(orig_mean, 2)
+            # Use blood type compatibility to calculate availability
+            compatible_types = compatibility_map.get(selected_blood, [])
             
-                if role.lower() == "donor":
-                    demand_pct = round(100 - orig_mean_pct, 2)
-                    st.success(
-                        f"Your blood type is needed by approximately **{demand_pct}%** of the population in {continent}."
-                    )
-                else:
-                    avail_pct = orig_mean_pct
-                    st.info(
-                        f"You have a **{avail_pct}%** chance of finding a donor match in {continent}."
-                    )
+            # Filter pie_vals for compatible blood types
+            compatible_rows = pie_vals[pie_vals["Blood Type"].isin(compatible_types)]
+            
+            # Sum their proportions
+            availability_pct = round(compatible_rows["Mean Proportion"].sum(), 2)
+            
+            if role.lower() == "donor":
+                st.success(
+                    f"People in {continent} with **{', '.join(compatible_types)}** blood types may benefit from your donation."
+                )
+            else:
+                st.info(
+                    f"You have a **{availability_pct}%** chance of finding a compatible donor in {continent} (matching blood types: {', '.join(compatible_types)})."
+                )
     
 else:
      # --- Starting Page with Global Overview ---
