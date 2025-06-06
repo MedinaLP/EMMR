@@ -90,10 +90,10 @@ if submitted:
             # ==========================
             if role == "Donor":
                 bar_data = continent_data.nsmallest(5, selected_blood)
-                bar_title = f"Top 5 Countries NEEDING {selected_blood} (lowest prevalence)"
+                bar_title = f"Top 5 Countries needing {selected_blood} blood type"
             else:
                 bar_data = continent_data.nlargest(5, selected_blood)
-                bar_title = f"Top 5 Countries WITH {selected_blood} (highest prevalence)"
+                bar_title = f"Top 5 Countries with highest {selected_blood} blood type"
 
             bar_fig = px.bar(
                 bar_data,
@@ -103,6 +103,34 @@ if submitted:
                 title=bar_title,
             )
             st.plotly_chart(bar_fig, use_container_width=True)
+
+            # ==========================
+            # PIE: blood type distribution (mean across countries)
+            # ==========================
+            pie_vals = continent_data[bloodtype_columns].mean().reset_index()
+            pie_vals.columns = ["Blood Type", "Mean Proportion"]
+            pie_fig = px.pie(
+                pie_vals,
+                names="Blood Type",
+                values="Mean Proportion",
+                title=f"Average Blood Type Distribution in {continent}",
+            )
+            st.plotly_chart(pie_fig, use_container_width=True)
+            
+            # ==========================
+            # TEXT PREDICTION (simple heuristic based on prevalence)
+            # ==========================
+            mean_val = continent_data[selected_blood].mean()
+            if role == "Donor":
+                demand_pct = round((1 - mean_val) * 100, 2)
+                st.success(
+                    f"Your blood type is needed by approximately **{demand_pct}%** of the population in {continent}."
+                )
+            else:
+                availability_pct = round(mean_val * 100, 2)
+                st.info(
+                    f"You have a **{availability_pct}%** chance of finding a donor match in {continent}."
+                )
 
             
 
