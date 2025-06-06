@@ -24,6 +24,8 @@ df = load_data()
 world_data = load_world_data()
 model = load_model()
 
+le = LabelEncoder()
+df['Country_Num'] = le.fit_transform(df['Country'])
 bloodtype_columns = ['O+', 'A+', 'B+', 'AB+', 'O-', 'A-', 'B-', 'AB-']
 
 # --- Data Preprocessing ---
@@ -31,9 +33,6 @@ df.fillna(0, inplace=True)
 df.drop_duplicates(inplace=True)
 df['Country'] = df['Country'].str.strip()
 df.columns = df.columns.str.strip()  # Remove whitespace from column names
-
-le = LabelEncoder()
-df['Country_Num'] = le.fit_transform(df['Country'])
 
 # Define continent coordinates (optional for maps)
 continent_coords = {
