@@ -6,6 +6,12 @@ import joblib
 from sklearn.preprocessing import MinMaxScaler, LabelEncoder
 import plotly.express as px
 
+
+raw_df = pd.read_csv('blood_data.csv')  # same file but untouched
+raw_df['Country'] = raw_df['Country'].str.strip()
+from xgboost import XGBClassifier
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler
+
 # --- Caching for speed ---
 @st.cache_data
 def load_data():
@@ -120,19 +126,23 @@ if submitted:
             # ==========================
             # TEXT PREDICTION (simple heuristic based on prevalence)
             # ==========================
-            mean_val = continent_data[selected_blood].mean()
-            if role == "Donor":
-                demand_pct = round((1 - mean_val) * 100, 2)
-                st.success(
-                    f"Your blood type is needed by approximately **{demand_pct}%** of the population in {continent}."
-                )
+            raw_continent = raw_df[raw_df['Continent'] == continent]
+            if raw_continent.empty:
+                st.warning("No raw data for true percentage computation.")
             else:
-                availability_pct = round(mean_val * 100, 2)
-                st.info(
+                orig_mean = raw_continent[selected_blood].mean()  # this is 0‑100 %
+                if role.lower() == "donor":
+                    demand_pct = round(100 - orig_mean, 2)
+                    st.success(
+                        f"Your blood type is needed by approximately **{demand_pct}%** of the population in {continent}."
+                    )
+                else:
+                    avail_pct = round(orig_mean, 2)
+                    st.info(
+                        f"You have a **{avail_pct}%** chance of finding a donor match in {continent}."
+                    )
                     f"You have a **{availability_pct}%** chance of finding a donor match in {continent}."
                 )
-
-            
 
 else:
      # --- Starting Page with Global Overview ---
