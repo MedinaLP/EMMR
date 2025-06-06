@@ -121,22 +121,24 @@ if submitted:
             # ==========================
             # TEXT PREDICTION (simple heuristic based on prevalence)
             # ==========================
-            selected_row = pie_vals[pie_vals['Blood Type'] == selected_blood]
-            if not selected_row.empty:
-                pie_pct = selected_row['Mean Proportion'].values[0] * 100  # Convert to percentage
+            selected_row = pie_vals[pie_vals["Blood Type"] == selected_blood]
+
+            if selected_row.empty:
+                st.warning(f"No data available for {selected_blood} in {continent}.")
+            else:
+                orig_mean = selected_row["Mean Proportion"].values[0]
+                orig_mean_pct = round(orig_mean, 2)
             
                 if role.lower() == "donor":
-                    demand_pct = round(100 - pie_pct, 2)
+                    demand_pct = round(100 - orig_mean_pct, 2)
                     st.success(
                         f"Your blood type is needed by approximately **{demand_pct}%** of the population in {continent}."
                     )
                 else:
-                    avail_pct = round(pie_pct, 2)
+                    avail_pct = orig_mean_pct
                     st.info(
                         f"You have a **{avail_pct}%** chance of finding a donor match in {continent}."
                     )
-            else:
-                st.warning("Selected blood type data not found in pie chart distribution.")
     
 else:
      # --- Starting Page with Global Overview ---
