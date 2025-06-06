@@ -70,22 +70,8 @@ selected_blood = st.sidebar.selectbox("Select Your Blood Type", blood_types)
 role = st.sidebar.radio("Are you a...", ['Donor', 'Recipient'])
 
 if st.sidebar.button("Submit"):
-    predictions = get_predictions(selected_blood, role)
-    tab_list = st.tabs(continents)
-
-    for idx, continent in enumerate(continents):
-        with tab_list[idx]:
-            st.header(f"{continent}") 
-            st.subheader("Overview for {selected_blood} ({role})")
-            continent_data = df[df['Continent'] == continent].copy()
-            continent_data['Blood Type'] = selected_blood
-            continent_data['Count'] = continent_data[selected_blood]
-
-            if continent_data.empty:
-                st.warning(f"No data available for {continent}.")
-                continue
-
-# --- Starting Page with Global Overview ---
+    
+    # --- Starting Page with Global Overview ---
 st.title("🌍 Data-driven Global Prediction of Blood Type Probabilities for Donors and Patients")
 
 if not world_data.empty:
@@ -109,3 +95,18 @@ if not world_data.empty:
     st.warning(f"Rarest Blood Type in the World: **{least_common}**")
 else:
     st.warning("No global data available.")
+    
+    predictions = get_predictions(selected_blood, role)
+    tab_list = st.tabs(continents)
+
+    for idx, continent in enumerate(continents):
+        with tab_list[idx]:
+            st.header(f"{continent}")
+            st.subheader(f"Overview for {selected_blood} ({role})")
+            continent_data = df[df['Continent'] == continent].copy()
+            continent_data['Blood Type'] = selected_blood
+            continent_data['Count'] = continent_data[selected_blood]
+
+            if continent_data.empty:
+                st.warning(f"No data available for {continent}.")
+                continue
