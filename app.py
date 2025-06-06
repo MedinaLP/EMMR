@@ -68,44 +68,61 @@ st.sidebar.header("Blood Type Probability Tool")
 blood_types = ['A+', 'O+', 'B+', 'AB+', 'A-', 'B-', 'O-', 'AB-']
 selected_blood = st.sidebar.selectbox("Select Your Blood Type", blood_types)
 role = st.sidebar.radio("Are you a...", ['Donor', 'Recipient'])
+submitted = st.sidebar.button("Submit")
 
-# --- Starting Page with Global Overview ---
-st.title("🌍 Data-driven Global Prediction of Blood Type Probabilities for Donors and Patients")
+if submitted:
+    st.header(f"🩸Showing Compatibility Map for {selected_blood} ({role})")
 
-if not world_data.empty:
-    blood_counts = world_data[bloodtype_columns].T.reset_index()
-    blood_counts.columns = ['Blood Type', 'Proportion']
-
-    st.subheader("World Blood Type Distribution")
-    fig = px.bar(
-        blood_counts,
-        x='Blood Type',
-        y='Proportion',
-        color='Blood Type',
-        title="Distribution of Blood Types Globally",
-        labels={'Proportion': 'Proportion (Normalized)'}
-    )
-    st.plotly_chart(fig, use_container_width=True)
-
-    most_common = blood_counts.loc[blood_counts['Proportion'].idxmax(), 'Blood Type']
-    least_common = blood_counts.loc[blood_counts['Proportion'].idxmin(), 'Blood Type']
-    st.success(f"Most Common Blood Type in the World: **{most_common}**")
-    st.warning(f"Rarest Blood Type in the World: **{least_common}**")
-else:
-    st.warning("No global data available.")
-
-if st.sidebar.button("Submit"):    
-    predictions = get_predictions(selected_blood, role)
     tab_list = st.tabs(continents)
+    predictions = get_predictions(selected_blood, role)
 
     for idx, continent in enumerate(continents):
         with tab_list[idx]:
-            st.header(f"{continent}")
+            st.header(f"{continent} 
             st.subheader(f"Overview for {selected_blood} ({role})")
-            continent_data = df[df['Continent'] == continent].copy()
-            continent_data['Blood Type'] = selected_blood
-            continent_data['Count'] = continent_data[selected_blood]
 
-            if continent_data.empty:
-                st.warning(f"No data available for {continent}.")
-                continue
+            df_continent = df[df['Continent'] == continent].copy()
+            df_continent = df_continent.sort_values(by='Country')
+
+            # Display map or chart based on donor/recipient logic
+            if role == 'donor':
+                match_column = f"{selected_blood}_donate"
+            else:
+                match_column = f"{selected_blood}_receive"
+
+            if match_column in df_continent.columns:
+                fig = px.choropleth(df_continent,
+                                    locations="Country",
+                                    locationmode="country names",
+                                    color=match_column,
+                                    hover_name="Country",
+                                    color_continuous_scale="RdBu",
+                                    title=f"{role.title()} Compatibility Map in {continent}")
+                st.plotly_chart(fig)
+            else:
+                st.warning("No compatibility data available for this selection.")
+else:
+     # --- Starting Page with Global Overview ---
+    st.title("🌍 Data-driven Global Prediction of Blood Type Probabilities for Donors and Patients")
+    
+    if not world_data.empty:
+        blood_counts = world_data[bloodtype_columns].T.reset_index()
+        blood_counts.columns = ['Blood Type', 'Proportion']
+    
+        st.subheader("World Blood Type Distribution")
+        fig = px.bar(
+            blood_counts,
+            x='Blood Type',
+            y='Proportion',
+            color='Blood Type',
+            title="Distribution of Blood Types Globally",
+            labels={'Proportion': 'Proportion (Normalized)'}
+        )
+        st.plotly_chart(fig, use_container_width=True)
+    
+        most_common = blood_counts.loc[blood_counts['Proportion'].idxmax(), 'Blood Type']
+        least_common = blood_counts.loc[blood_counts['Proportion'].idxmin(), 'Blood Type']
+        st.success(f"Most Common Blood Type in the World: **{most_common}**")
+        st.warning(f"Rarest Blood Type in the World: **{least_common}**")
+    else:
+        st.warning("No global data available.")
