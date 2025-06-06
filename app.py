@@ -45,19 +45,6 @@ continent_coords = {
 }
 continents = list(continent_coords.keys())
 
-# Prediction Function
-def get_predictions(blood_type, role):
-    results = {}
-    for continent in continents:
-        input_df = pd.DataFrame({
-            'Blood Type': [blood_type],
-            'Role': [role],
-            'Continent': [continent]
-        })
-        pred = model.predict_proba(input_df)[0][1] * 100
-        results[continent] = round(pred, 2)
-    return results
-
 # --- UI ---
 st.sidebar.header("Blood Type Probability Tool")
 blood_types = ['A+', 'O+', 'B+', 'AB+', 'A-', 'B-', 'O-', 'AB-']
@@ -69,7 +56,7 @@ if submitted:
     st.header(f"🩸Showing Compatibility Map for {selected_blood} ({role})")
 
     tab_list = st.tabs(continents)
-    predictions = get_predictions(selected_blood, role)
+    #predictions = get_predictions(selected_blood, role)
 
     for idx, continent in enumerate(continents):
         with tab_list[idx]:
@@ -92,7 +79,7 @@ if submitted:
                 locationmode="country names",
                 color=selected_blood,
                 hover_name="Country",
-                color_continuous_scale="Reds" if role == "donor" else "Blues",
+                color_continuous_scale = "Reds" if role.lower() == "donor" else "Blues",
                 title=f"{selected_blood} Distribution in {continent}",
                 scope="world"
             )
